@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopMax - Online Shopping</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .hidden-content {
+      display: none;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(to right, #007bff, #00c6ff);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: #ffe600;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: white;
+      color: #007bff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero h1 {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 36px;
+      padding: 20px 40px;
+      border-radius: 12px;
+    }
+
+    section {
+      padding: 40px 60px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 4px;
+      background: #ff9800;
+      bottom: -6px;
+      left: 0;
+      border-radius: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .add-cart {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .remove-cart-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      margin-left: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .cart-popup {
+      position: fixed;
+      top: 20%;
+      right: 30px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      display: none;
+    }
+
+    .cart-popup h4 {
+      margin-bottom: 10px;
+    }
+
+    .cart-popup ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .cart-popup li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cart-popup img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    .cart-popup .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .login-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+    }
+
+    .login-popup input {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: #333;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay" id="overlay" onclick="closeLogin()"></div>
+  <div class="login-popup" id="loginPopup">
+    <h3>Login</h3>
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button class="add-cart" onclick="loginUser()">Login</button>
+  </div>
+
+  <div class="cart-popup" id="cartPopup">
+    <button class="close-btn" onclick="closeCart()">&times;</button>
+    <h4>Your Cart</h4>
+    <ul id="cartItems"></ul>
+  </div>
+
+  <div class="hidden-content" id="mainContent">
+    <header class="navbar">
+      <div class="logo">ShopMax</div>
+      <nav class="nav-links">
+        <a href="#categories">Categories</a>
+        <a href="#essentials">Essentials</a>
+        <a href="#branded">Branded</a>
+        <a href="#new">New</a>
+        <a href="#flash">Flash Deals</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="nav-btn" onclick="viewCart()">🛒 Cart</button>
+        <button class="nav-btn" onclick="showLogin()">Login</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>Get Started With Your Favorite Shopping</h1>
+    </section>
+
+    <!-- IMAGE SECTIONS RESTORED -->
+    <section id="categories">
+      <h2 class="section-title">Categories</h2>
+      <div class="grid">
+        <div class="card"><img src="laptop.png"><p>Laptops</p></div>
+        <div class="card"><img src="mobile.png"><p>Mobiles</p></div>
+        <div class="card"><img src="clothres.jpg"><p>Clothes</p></div>
+        <div class="card"><img src="speaker symbol.png"><p>Speakers</p></div>
+        <div class="card"><img src="homne.jpg"><p>Home Essentials</p></div>
+      </div>
+    </section>
+
+    <section id="essentials">
+      <h2 class="section-title">Essentials</h2>
+      <div class="grid">
+        <div class="card"><img src="soap.jpeg"><p>Bath Soap</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="toothpasrte.jpeg"><p>Toothpaste</p><button class="add-cart">Add to Cart</button></div>
+      </div>
+    </section>
+
+    <section id="branded">
+      <h2 class="section-title">Branded</h2>
+      <div class="grid">
+        <div class="card"><img src="nss.jpeg"><p>Nike Shoes</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="lssssj.jpg"><p>Levi Jeans</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="adidas bag.jpeg"><p>Adidas Bag</p><button class="add-cart">Add to Cart</button></div>
+      </div>
+    </section>
+
+    <section id="new">
+      <h2 class="section-title">Freshly Released</h2>
+      <div class="grid">
+        <div class="card"><img src="sw.webp"><p>Smartwatch X10</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="hs.jpeg"><p>Headset</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="vr.jpeg"><p>VR Headset</p><button class="add-cart">Add to Cart</button></div>
+      </div>
+    </section>
+
+    <section id="flash">
+      <h2 class="section-title">Flash Deals</h2>
+      <div class="grid">
+        <div class="card"><img src="download.jpeg"><p>Wireless Earbuds - 50% Off</p><button class="add-cart">Add to Cart</button></div>
+        <div class="card"><img src="pb.jpeg"><p>Powerbank - 60% Off</p><button class="add-cart">Add to Cart</button></div>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 ShopMax. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    const cart = [];
+
+    function showLogin() {
+      document.getElementById('loginPopup').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeLogin() {
+      document.getElementById('loginPopup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    function loginUser() {
+      alert("Logged in successfully!");
+      closeLogin();
+      document.getElementById('mainContent').classList.remove('hidden-content');
+    }
+
+    function addToCart(name, imageSrc) {
+      cart.push({ name, imageSrc });
+      alert(`${name} added to cart!`);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      viewCart();
+    }
+
+    function closeCart() {
+      document.getElementById('cartPopup').style.display = 'none';
+    }
+
+    function viewCart() {
+      const popup = document.getElementById('cartPopup');
+      const list = document.getElementById('cartItems');
+      list.innerHTML = '';
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<img src="${item.imageSrc}" alt=""> <span>${item.name}</span> <button class="remove-cart-btn" onclick="removeFromCart(${index})">Remove</button>`;
+        list.appendChild(li);
+      });
+      popup.style.display = 'block';
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('add-cart')) {
+        const card = e.target.closest('.card');
+        const name = card.querySelector('p').innerText;
+        const image = card.querySelector('img').src;
+        addToCart(name, image);
+      }
+    });
+
+    window.onload = showLogin;
+  </script>
+</body>
+
+</html>
